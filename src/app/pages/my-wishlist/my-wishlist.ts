@@ -75,7 +75,7 @@ import { EcommerceStore } from '../../ecommerce-store';
           </div>
           <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Your wishlist is empty</h2>
           <p class="text-gray-500 text-xs sm:text-sm mb-4 sm:mb-6 max-w-sm">Save items you love for later!</p>
-          <button routerLink="/products/all" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 sm:px-6 py-2 sm:py-2.5 rounded-lg transition shadow-md text-sm sm:text-base">
+          <button routerLink="/products/all" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 sm:px-6 py-2 sm:py-2.5 rounded-lg transition shadow-md text-sm sm:text-base cursor-pointer">
             Start Shopping
           </button>
         </div>

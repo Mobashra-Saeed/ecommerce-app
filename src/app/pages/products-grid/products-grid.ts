@@ -1,5 +1,7 @@
 import { Component, inject, input, signal, effect, computed, viewChild } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 import { ProductCard } from '../../components/product-card/product-card';
 import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { MatNavList, MatListItem, MatListItemTitle } from '@angular/material/list';
@@ -25,16 +27,17 @@ import { MatIconButton } from '@angular/material/button';
     MatIconButton,
   ],
   template: `
-    <mat-sidenav-container class="h-[calc(100vh-64px)] w-full">
+    <mat-sidenav-container class="h-full w-full bg-transparent">
       
-      <!-- Sidenav responds to manual toggles across all screen widths -->
+      <!-- Sidenav - sticky on desktop by using position sticky via CSS -->
       <mat-sidenav #sidenav 
                    [mode]="isDesktop() ? 'side' : 'over'" 
                    [opened]="sidenavOpened()" 
-                   class="w-[250px] bg-gray-200 h-full border-r border-gray-300">
+                   class="sidenav-panel w-[250px] bg-gray-200 border-r border-gray-300"
+                   [class.sticky-sidenav]="isDesktop()">
         <div class="p-4">
           
-          <!-- UNIFIED HEADER (Shows cross close icon on BOTH mobile and desktop) -->
+          <!-- Cross icon is present and operational for manual toggles -->
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-bold text-gray-900">Categories</h2>
             <button matIconButton (click)="toggleSidenav()">
@@ -58,22 +61,22 @@ import { MatIconButton } from '@angular/material/button';
         </div>
       </mat-sidenav>
 
-      <!-- Main Content Area -->
-      <mat-sidenav-content class="bg-gray-100 p-4 sm:p-6 h-full overflow-y-auto">
+      <mat-sidenav-content class="bg-gray-100 px-3 sm:px-4 md:px-6 py-4">
         
-        <!-- TOP TOOLBAR: Always present toggle button for when sidenav is closed -->
-        <div class="flex items-center gap-3 mb-4">
+        <!-- Top Title Bar with dynamic hamburger menu button -->
+        <div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
           @if (!sidenav.opened) {
             <button matIconButton (click)="toggleSidenav()">
               <mat-icon>menu</mat-icon>
             </button>
           }
-          <h1 class="text-xl md:text-2xl font-bold text-gray-900">{{ category() | titlecase }}</h1>
+          <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{{ category() | titlecase }}</h1>
         </div>
         
-        <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">{{ store.filteredproducts().length }} products</p>
+        <p class="text-xs sm:text-sm md:text-base text-gray-600 mb-3 sm:mb-4 md:mb-6">{{ store.filteredproducts().length }} products</p>
         
-        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+        <!-- Optimized grid structure to look balanced on mobile, tablets, and laptops -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           @for (product of store.filteredproducts(); track product.id) {
             <app-product-card [product]="product"></app-product-card>
           }
@@ -81,21 +84,34 @@ import { MatIconButton } from '@angular/material/button';
       </mat-sidenav-content>
     </mat-sidenav-container>
   `,
-  styles: ``,
+  styles: `
+    :host {
+      display: block;
+      height: calc(100vh - 56px);
+    }
+    mat-sidenav-container {
+      height: 100%;
+    }
+    mat-sidenav-content {
+      scrollbar-width: thin;
+    }
+  `
 })
 export default class ProductsGrid {
   readonly store = inject(EcommerceStore);
   category = input<string>('');
   private breakpointObserver = inject(BreakpointObserver);
 
-  // References the sidenav instance directly to check state
   sidenav = viewChild.required(MatSidenav);
 
-  isDesktop = computed(() => 
-    this.breakpointObserver.isMatched('(min-width: 768px)')
+  // FIX: Shifted query to 768px (Tailwind md) so tablets are grouped with desktops/laptops
+  isDesktop = toSignal(
+    this.breakpointObserver.observe('(min-width: 768px)').pipe(
+      map(result => result.matches)
+    ),
+    { initialValue: false }
   );
 
-  // Tracks open state explicitly using a dynamic signal reactive wrapper
   sidenavOpened = signal(true);
 
   constructor() {
@@ -103,7 +119,7 @@ export default class ProductsGrid {
       this.store.setCategory(this.category());
     });
 
-    // Automatically open the sidebar when shifting from mobile to desktop viewports
+    // Auto-open layout whenever screen crosses the mobile/tablet threshold
     effect(() => {
       this.sidenavOpened.set(this.isDesktop());
     });
@@ -114,17 +130,7 @@ export default class ProductsGrid {
   }
 
   Categories = signal<string[]>([
-    'all',
-    'Audio',
-    'TV',
-    'Gaming',
-    'Mobile',
-    'Computers',
-    'Wearables',
-    'Photography',
-    'Storage',
-    'Accessories',
-    'Tablets',
-    'Smart Home',
+    'all', 'Audio', 'TV', 'Gaming', 'Mobile', 'Computers',
+    'Wearables', 'Photography', 'Storage', 'Accessories', 'Tablets', 'Smart Home'
   ]);
 }
