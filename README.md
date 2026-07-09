@@ -1,59 +1,34 @@
-# NgEcommerce
+# Angular E-Commerce App 🛒
+
+A fully functional, responsive front-end e-commerce application built with **Angular** and **Tailwind CSS**. This project demonstrates modern Angular features, including Standalone Components, routing, and reactive state management using Signals.
+
+## ✨ Features
+
+- **Product Discovery:** Browse a diverse catalog of products with real-time category filtering.
+- **Product Details:** Dedicated product pages displaying high-quality images, reviews, stock status, and detailed descriptions.
+- **Shopping Cart & Checkout:** Add items to the cart, view real-time price totals (including tax), and complete a simulated checkout flow.
+- **Wishlist:** Users can "heart" favorite items to save them for later.
+- **User Authentication:** Simulated Sign-In and Sign-Up flows that update the UI state upon login.
+- **Responsive Design:** Fully mobile-friendly UI built with Tailwind CSS.
+
+## 🛠️ Tech Stack
+
+- **Framework:** Angular (v22)
+- **Styling:** Tailwind CSS
+- **UI Components:** Angular Material (Buttons, Icons, Badges)
+- **State Management:** Angular Signals (Custom Global Store)
+- **Deployment:** Vercel
+
+## 🚀 Live Demo
+
+Check out the live application here: **[Insert your Vercel URL here once deployed]**
+
+---
+
+## 💻 Local Development Setup
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.5.
 
-## Development server
-
-To start a local development server, run:
-
+### 1. Install Dependencies
 ```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+npm install
