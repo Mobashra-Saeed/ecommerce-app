@@ -21,8 +21,6 @@ import { EcommerceStore } from '../../ecommerce-store';
       @if (product()) {
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
-            
-            <!-- LEFT SIDE: Image Container -->
             <div class="bg-gray-50 p-4 sm:p-8 flex items-center justify-center h-full min-h-[250px] md:min-h-[500px]">
               <img [src]="product()?.imageURL" [alt]="product()?.name" class="max-w-full max-h-[300px] sm:max-h-[400px] object-contain rounded-xl shadow-lg mix-blend-multiply" />
             </div>

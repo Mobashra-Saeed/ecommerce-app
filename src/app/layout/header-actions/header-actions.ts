@@ -37,7 +37,6 @@ import { EcommerceStore } from '../../ecommerce-store';
         </button>
       </div>
     } @else {
-      <!-- Added shrink-0 to this container as well -->
       <div class="flex items-center gap-1 sm:gap-2 ml-1 sm:ml-2 pl-1 sm:pl-4 border-l border-gray-200 shrink-0">
         <button matButton routerLink="/sign-in" class="!text-xs sm:!text-sm !px-2 sm:!px-4">Sign in</button>
         <button mat-flat-button color="primary" routerLink="/sign-up" class="!text-xs sm:!text-sm !px-2 sm:!px-4">Sign up</button>
