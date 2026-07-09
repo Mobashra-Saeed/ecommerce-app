@@ -11,7 +11,6 @@ import { EcommerceStore } from '../../ecommerce-store';
   template: ` 
   <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full relative hover:shadow-xl transition-shadow duration-300">
     
-    <!-- WRAPPER: Clicking anywhere in this block goes to the details page -->
     <a [routerLink]="['/product', product().id]" class="flex flex-col flex-1 cursor-pointer">
       
       <div class="relative w-full h-[200px] sm:h-[250px] md:h-[300px]">

@@ -60,7 +60,7 @@ import { MatIconButton } from '@angular/material/button';
         </div>
         <h1 class="text-2xl font-bold text-gray-900 mb-1 hidden md:block">{{ category() | titlecase }}</h1>
         <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">{{ store.filteredproducts().length }} products</p>
-        <div class="responsive-grid">
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           @for (product of store.filteredproducts(); track product.id) {
             <app-product-card [product]="product"></app-product-card>
           }
