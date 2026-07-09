@@ -1,13 +1,15 @@
 import { Component, inject, computed } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { EcommerceStore } from '../../ecommerce-store';
 
 @Component({
     selector: 'app-checkout',
-    imports: [RouterLink, CurrencyPipe],
+    imports: [RouterLink, CurrencyPipe, FormsModule],
     template: `
-    <div class="max-w-[1200px] mx-auto p-4 sm:p-6 min-h-[70vh]">
+    <!-- Added #checkoutForm="ngForm" on a wrapper element or form tag -->
+    <form #checkoutForm="ngForm" class="max-w-[1200px] mx-auto p-4 sm:p-6 min-h-[70vh]">
       
       <!-- Back Navigation -->
       <div class="mb-4 sm:mb-6">
@@ -29,19 +31,23 @@ import { EcommerceStore } from '../../ecommerce-store';
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="sm:col-span-2">
                 <label class="block text-sm font-medium text-gray-700">Full Name</label>
-                <input type="text" class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="John Doe">
+                <!-- Added name, ngModel, and required -->
+                <input type="text" name="fullName" ngModel required class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="John Doe">
               </div>
               <div class="sm:col-span-2">
                 <label class="block text-sm font-medium text-gray-700">Address</label>
-                <input type="text" class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="123 Main St">
+                <!-- Added name, ngModel, and required -->
+                <input type="text" name="address" ngModel required class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="123 Main St">
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700">City</label>
-                <input type="text" class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="New York">
+                <!-- Added name, ngModel, and required -->
+                <input type="text" name="city" ngModel required class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="New York">
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700">ZIP Code</label>
-                <input type="text" class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="10001">
+                <!-- Added name, ngModel, and required -->
+                <input type="text" name="zipCode" ngModel required class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="10001">
               </div>
             </div>
           </div>
@@ -52,16 +58,19 @@ import { EcommerceStore } from '../../ecommerce-store';
             <div class="space-y-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700">Card Number</label>
-                <input type="text" class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="0000 0000 0000 0000">
+                <!-- Added name, ngModel, and required -->
+                <input type="text" name="cardNumber" ngModel required class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="0000 0000 0000 0000">
               </div>
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700">Expiry Date</label>
-                  <input type="text" class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="MM/YY">
+                  <!-- Added name, ngModel, and required -->
+                  <input type="text" name="expiry" ngModel required class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="MM/YY">
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700">CVC</label>
-                  <input type="text" class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="123">
+                  <!-- Added name, ngModel, and required -->
+                  <input type="text" name="cvc" ngModel required class="mt-1 block w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="123">
                 </div>
               </div>
             </div>
@@ -97,19 +106,23 @@ import { EcommerceStore } from '../../ecommerce-store';
             </div>
           </div>
 
-          <button (click)="placeOrder()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 sm:py-3.5 px-4 rounded-xl transition shadow-md text-base sm:text-lg">
+          <!-- Added [disabled] and disabled classes handling -->
+          <button 
+            type="button"
+            (click)="placeOrder()" 
+            [disabled]="checkoutForm.invalid"
+            class="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold py-3 sm:py-3.5 px-4 rounded-xl transition shadow-md text-base sm:text-lg">
             Place Order
           </button>
         </div>
       </div>
-    </div>
+    </form>
   `
 })
 export default class Checkout {
     readonly store = inject(EcommerceStore);
     private router = inject(Router);
 
-    // Recalculate totals directly from the store
     subtotal = computed(() =>
         this.store.cart().reduce((sum, item) => sum + item.price, 0)
     );
@@ -122,13 +135,8 @@ export default class Checkout {
             return;
         }
 
-        // 1. Show success message
         alert('Payment successful! Your order has been placed.');
-
-        // 2. Empty the cart
         this.store.clearCart();
-
-        // 3. Send them back to the homepage
         this.router.navigate(['/products/all']);
     }
 }
