@@ -14,8 +14,7 @@ import { EcommerceStore } from '../../ecommerce-store';
     <a [routerLink]="['/product', product().id]" class="flex flex-col flex-1">
       
       <div class="relative w-full h-[180px] sm:h-[220px] md:h-[280px] overflow-hidden">
-        <img [src]="product().imageURL" class="w-full h-full object-cover transition-transform duration-700 ease-out" [alt]="product().name" />
-        <div class="absolute inset-0 bg-black opacity-0 transition-opacity duration-500"></div>
+        <img [src]="product().imageURL" class="w-full h-full object-conatin bg-white p-4 transition-transform duration-700 ease-out" [alt]="product().name" />
       </div>
     
       <div class="p-2 sm:p-2.5 md:p-4 flex flex-col flex-1">   
@@ -31,7 +30,7 @@ import { EcommerceStore } from '../../ecommerce-store';
     <!-- Wishlist Button -->
     <button 
       (click)="toggleWishlist($event)"
-      class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 md:top-3 md:right-3 bg-white hover:bg-gray-50 text-gray-700 p-1 sm:p-1.5 md:p-2 rounded-full shadow-md flex items-center justify-center transition-all duration-300 ease-out w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 border border-gray-100 z-20 hover:scale-110 hover:shadow-lg cursor-pointer">
+    class="absolute top-4 !right-5 sm:top-5 sm:right-2 md:top-6 md:right-2 bg-white hover:bg-gray-50 text-gray-700 p-0 rounded-full shadow-md flex items-center justify-center transition-all duration-300 ease-out w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 border border-gray-100 z-20 hover:scale-110 hover:shadow-lg cursor-pointer">
       <mat-icon class="text-sm sm:text-base md:text-lg transition-all duration-300" [class.text-red-500]="isInWishlist()">
         {{ isInWishlist() ? 'favorite' : 'favorite_border' }}
       </mat-icon>
