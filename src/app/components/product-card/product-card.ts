@@ -44,7 +44,7 @@ import { EcommerceStore } from '../../ecommerce-store';
       <button matButton="filled" 
               (click)="handleAddToCart($event)"
               class="flex items-center gap-0.5 sm:gap-1 md:gap-2 bg-blue-600 text-white !text-[11px] sm:!text-xs md:!text-sm px-1.5 sm:px-2 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 ease-out relative z-20 hover:scale-105 active:scale-95 cursor-pointer">
-        <mat-icon class="text-xs sm:text-sm md:text-base">shopping_cart</mat-icon> <span>Add to Cart</span>
+        <mat-icon class="text-xs sm:text-sm md:text-base">shopping_cart</mat-icon>
       </button>
     </div>
   </div>

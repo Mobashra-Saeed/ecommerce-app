@@ -47,12 +47,12 @@ import { EcommerceStore } from '../ecommerce-store';
 })
 export default class SignIn {
     private router = inject(Router);
-    readonly store = inject(EcommerceStore); // Inject the store
+    readonly store = inject(EcommerceStore); 
 
     onSubmit(event: Event) {
         event.preventDefault();
         
-        this.store.login(); // Tell the app we are logged in!
+        this.store.login(); 
         alert('Successfully signed in!'); 
         this.router.navigate(['/products/all']);
     }

@@ -45,8 +45,6 @@ body {
 
   --mat-sys-body-large-size: clamp(0.8125rem, 2vw, 0.875rem);
 }
-/* You can add global styles to this file, and also import other style files */
-
 html,
 body {
   height: 100%;
@@ -60,6 +58,15 @@ body {
     BlinkMacSystemFont,
     'Segoe UI',
     sans-serif;
+}
+
+/* Hide the page wrapper scrollbar - only the thin mat-sidenav-content scrollbar should show on the products page */
+.page-wrapper {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.page-wrapper::-webkit-scrollbar {
+  display: none;
 }
 
 .elevated {

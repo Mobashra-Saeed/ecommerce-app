@@ -1,9 +1,8 @@
-import { Component, inject, input, signal, effect, computed, viewChild } from '@angular/core';
+import { Component, inject, input, signal, effect, viewChild, ElementRef } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { ProductCard } from '../../components/product-card/product-card';
-import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { MatNavList, MatListItem, MatListItemTitle } from '@angular/material/list';
 import { RouterLink } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
@@ -15,9 +14,6 @@ import { MatIconButton } from '@angular/material/button';
   selector: 'app-products-grid',
   imports: [
     ProductCard,
-    MatSidenavContainer,
-    MatSidenav,
-    MatSidenavContent,
     MatNavList,
     MatListItem,
     MatListItemTitle,
@@ -27,45 +23,76 @@ import { MatIconButton } from '@angular/material/button';
     MatIconButton,
   ],
   template: `
-    <mat-sidenav-container class="h-full w-full bg-transparent">
-      
-      <!-- Sidenav - sticky on desktop by using position sticky via CSS -->
-      <mat-sidenav #sidenav 
-                   [mode]="isDesktop() ? 'side' : 'over'" 
-                   [opened]="sidenavOpened()" 
-                   class="sidenav-panel w-[250px] bg-gray-200 border-r border-gray-300"
-                   [class.sticky-sidenav]="isDesktop()">
-        <div class="p-4">
-          
-          <!-- Cross icon is present and operational for manual toggles -->
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-bold text-gray-900">Categories</h2>
-            <button matIconButton (click)="toggleSidenav()">
-              <mat-icon>close</mat-icon>
+    <!-- Mobile overlay backdrop -->
+    @if (!isDesktop() && sidenavOpened()) {
+      <div class="fixed inset-0 bg-black/50 z-20" (click)="toggleSidenav()"></div>
+    }
+    
+    <div class="flex h-full">
+      <!-- DESKTOP SIDEBAR -->
+      @if (isDesktop() && sidenavOpened()) {
+        <aside class="w-[180px] bg-white border-r border-gray-200 shrink-0">
+          <div class="p-3">
+            <!-- FIX 1: Added flex layout and close button to desktop -->
+            <div class="flex items-center justify-between mb-2">
+              <h2 class="text-sm font-bold text-gray-900">Categories</h2><button matIconButton (click)="toggleSidenav()" 
+                class="!w-8 !h-8 !p-0 flex items-center justify-center text-gray-500 hover:text-gray-800">
+              <mat-icon class="!text-[20px] !w-[20px] !h-[20px] m-0">close</mat-icon>
             </button>
+            </div>
+            
+            <mat-nav-list class="!pt-0">
+              @for (cat of Categories(); track cat) {
+                <mat-list-item
+                  [activated]="cat === category()"
+                  [routerLink]="['/products', cat]"
+                  [class]="cat === category() ? '!bg-blue-700 shadow-sm' : 'hover:!bg-gray-100'"
+                  class="!h-8 !min-h-8 !my-1 !rounded-md cursor-pointer transition-colors">
+                  <!-- Improved text contrast for active/inactive states -->
+                  <span matListItemTitle class="!text-sm !font-medium" [class]="cat === category() ? '!text-white' : '!text-gray-700'">
+                    {{ cat | titlecase }}
+                  </span>
+                </mat-list-item>
+              }
+            </mat-nav-list>
           </div>
-          
-          <mat-nav-list>
-            @for (cat of Categories(); track cat) {
-              <mat-list-item
-                [activated]="cat === category()"
-                [routerLink]="['/products', cat]"
-                (click)="!isDesktop() && sidenav.close()"
-                class="my-2 cursor-pointer">
-                <span matListItemTitle class="font-medium" [class]="cat === category() ? '!text-white' : ''">
-                  {{ cat | titlecase }}
-                </span>
-              </mat-list-item>
-            }
-          </mat-nav-list>
-        </div>
-      </mat-sidenav>
-
-      <mat-sidenav-content class="bg-gray-100 px-3 sm:px-4 md:px-6 py-4">
+        </aside>
+      }
+      
+      <!-- MOBILE SIDEBAR -->
+      @if (!isDesktop() && sidenavOpened()) {
+        <aside class="fixed left-0 top-[56px] bottom-0 w-[220px] bg-white border-r border-gray-200 z-30 shadow-lg">
+          <div class="p-3">
+            <div class="flex items-center justify-between mb-2">
+              <h2 class="text-sm font-bold text-gray-900">Categories</h2>
+              <button matIconButton (click)="toggleSidenav()" class="!w-7 !h-7 text-gray-500 hover:text-gray-800">
+                <mat-icon class="!text-lg">close</mat-icon>
+              </button>
+            </div>
+            <mat-nav-list class="!pt-0">
+              @for (cat of Categories(); track cat) {
+                <mat-list-item
+                  [activated]="cat === category()"
+                  [routerLink]="['/products', cat]"
+                  (click)="sidenavOpened.set(false)"
+                  [class]="cat === category() ? '!bg-blue-600 shadow-sm' : 'hover:!bg-gray-50'"
+                  class="!h-8 !min-h-8 !my-0.5 !rounded-md cursor-pointer transition-colors">
+                  <span matListItemTitle class="!text-xs !font-medium" [class]="cat === category() ? '!text-white' : '!text-gray-700'">
+                    {{ cat | titlecase }}
+                  </span>
+                </mat-list-item>
+              }
+            </mat-nav-list>
+          </div>
+        </aside>
+      }
+      
+      <!-- Main Content - Scrolls independently -->
+      <main class="flex-1 overflow-y-auto bg-gray-100 px-3 sm:px-4 md:px-6 py-4"
+            [class.scrollbar-thin]="true">
         
-        <!-- Top Title Bar with dynamic hamburger menu button -->
         <div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-          @if (!sidenav.opened) {
+          @if (!isDesktop() || !sidenavOpened()) {
             <button matIconButton (click)="toggleSidenav()">
               <mat-icon>menu</mat-icon>
             </button>
@@ -75,24 +102,21 @@ import { MatIconButton } from '@angular/material/button';
         
         <p class="text-xs sm:text-sm md:text-base text-gray-600 mb-3 sm:mb-4 md:mb-6">{{ store.filteredproducts().length }} products</p>
         
-        <!-- Optimized grid structure to look balanced on mobile, tablets, and laptops -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
           @for (product of store.filteredproducts(); track product.id) {
             <app-product-card [product]="product"></app-product-card>
           }
         </div>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
+      </main>
+      
+    </div>
   `,
   styles: `
     :host {
       display: block;
-      height: calc(100vh - 56px);
-    }
-    mat-sidenav-container {
       height: 100%;
     }
-    mat-sidenav-content {
+    .scrollbar-thin {
       scrollbar-width: thin;
     }
   `
@@ -102,9 +126,6 @@ export default class ProductsGrid {
   category = input<string>('');
   private breakpointObserver = inject(BreakpointObserver);
 
-  sidenav = viewChild.required(MatSidenav);
-
-  // FIX: Shifted query to 768px (Tailwind md) so tablets are grouped with desktops/laptops
   isDesktop = toSignal(
     this.breakpointObserver.observe('(min-width: 768px)').pipe(
       map(result => result.matches)
@@ -119,7 +140,6 @@ export default class ProductsGrid {
       this.store.setCategory(this.category());
     });
 
-    // Auto-open layout whenever screen crosses the mobile/tablet threshold
     effect(() => {
       this.sidenavOpened.set(this.isDesktop());
     });
